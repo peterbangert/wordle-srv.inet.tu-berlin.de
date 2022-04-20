@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "preinstall": "npx npm-force-resolutions"
+  },
+  "resolutions": {
+    "glob-parent": "^6.0.1"
+  },
+  "dependencies": {
+    "live-server": "^1.2.1"
+  }
+}
