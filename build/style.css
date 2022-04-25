@@ -53,3 +53,77 @@ h1 {
   cursor: pointer;
   text-transform: uppercase;
 }
+
+.navbar {
+     
+  background-color: #C50E1F;
+  display:flex;
+  justify-content:center;
+
+  box-shadow: 2px 8px 16px 0px rgba(0,0,0,0.2);
+  margin: 14px 16px;
+}
+ 
+.navbar a {
+  font-size: 16px;
+  color: white;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+
+.dropdown .dropbtn {
+  font-size: 16px;  
+  border: none;
+  outline: none;
+  color: white;
+
+  padding: 14px 16px 16px 30px;
+  background-color: inherit;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0;
+  background-image: linear-gradient(transparent,transparent),url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2218%22 height=%2218%22 viewBox=%220 0 24 24%22%3E %3Cpath fill=%22%2372777d%22 d=%22M13 19l.8-3h5.3l.9 3h2.2L18 6h-3l-4.2 13H13zm3.5-11l2 6h-4l2-6zM5 4l.938 1.906H1V8h1.594C3.194 9.8 4 11.206 5 12.406c-1.1.7-4.313 1.781-4.313 1.781L2 16s3.487-1.387 4.688-2.188c1 .7 2.319 1.188 3.719 1.688l.594-2c-1-.3-1.988-.688-2.688-1.188 1.1-1.1 1.9-2.506 2.5-4.406h2.188l.5-2H7.938L7 4H5zm-.188 4h3.781c-.4 1.3-.906 2-1.906 3-1.1-1-1.475-1.7-1.875-3z%22/%3E %3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: left 2px center;
+  background-size: 25px;
+}
+
+.navbar a:hover, .dropdown:hover .dropbtn {
+  background-color: #F73D4B;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #DDDDDD;
+ 
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+.dropdown-content a {
+
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+  text-align: left;
+  background-color: white;
+  cursor: pointer;
+
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+

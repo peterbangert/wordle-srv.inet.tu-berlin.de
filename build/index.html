@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wordle</title>
+    <title>INET Wordle</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
     <link
@@ -14,6 +14,21 @@
 </head>
 <body>
     <h1> INET Wordle </h1>
+
+
+    <div class="navbar">
+        <a id="hard-mode" >Hard Mode</a>
+        <div class="dropdown">
+          <button class="dropbtn">Language 
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <div id='l8n' class="dropdown-content">
+            <a class='l8n-button' style="background-color:gray" id='en' >EN</a>
+            <a class='l8n-button' id='de' >DE</a>
+          </div>
+        </div> 
+      </div>
+    
     
     <div id="game-board">
 
@@ -31,6 +46,8 @@
             <button class="keyboard-button">i</button>
             <button class="keyboard-button">o</button>
             <button class="keyboard-button">p</button>
+            <button class="keyboard-button de-button" hidden >ü</button>
+            <button class="keyboard-button de-button" hidden >ß</button>
         </div>
         <div class="second-row">
             <button class="keyboard-button">a</button>
@@ -42,6 +59,8 @@
             <button class="keyboard-button">j</button>
             <button class="keyboard-button">k</button>
             <button class="keyboard-button">l</button>
+            <button class="keyboard-button de-button" hidden >ä</button>
+            <button class="keyboard-button de-button" hidden >ö</button>
         </div>
         <div class="third-row">
             <button class="keyboard-button">Del</button>
