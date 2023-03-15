@@ -29,10 +29,23 @@
         </div> 
       </div>
     
+
+    
+      <div id="user-info">
+        <form  method="get" id="name-id-form">
+          Name: 
+          <input type="text" id="user_name" value="" maxlength="40" />
+           ID: 
+          <input type="text" id="user_id" value="" maxlength="40" />
+          
+          </form>
+        </div>
     
     <div id="game-board">
 
     </div>
+
+    
 
     <div id="keyboard-cont">
         <div class="first-row">
@@ -71,9 +84,21 @@
             <button class="keyboard-button">b</button>
             <button class="keyboard-button">n</button>
             <button class="keyboard-button">m</button>
-            <button class="keyboard-button">Enter</button>
+            <button class="keyboard-button">Submit</button>
+            
+        </div>
+        
+
+        <div class="fourth-row">
+          <span id="time">05:00</span>
+          <button id='start-game' class="keyboard-button">Start</button>
+          <button id='resign-game' class="keyboard-button" hidden>Resign</button>
         </div>
     </div>
+
+  
+  
+
 
 <script
 src="https://code.jquery.com/jquery-3.6.0.min.js"

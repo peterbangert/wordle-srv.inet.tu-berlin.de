@@ -7,14 +7,27 @@ let currentGuess = [];
 let nextLetter = 0;
 let Language = 'en';
 let HardMode = false;
-let rightGuessString = WORDS_EN[Math.floor(Math.random() * WORDS_EN.length)]
-let WORDS = WORDS_EN
+let WORDS = WORDS_EN;
+let WORD = 'hello';
 let hardModeCorrectGuesses = ['','','','','']; 
 let hardModeHints = []; 
-
+let lossCondition = 'Loss'
+let winCondition = 'Win'
+let guessCondition = 'Guess'
+let timeoutCondition = 'Timeout'
+let resignCondition = 'Resign'
+let easyModeTimeLimit = 60 * 5
+let hardModeTimeLimit = 60 * 3
+let timeLimit = easyModeTimeLimit
+let GameStarted = false
+let refreshIntervalId = ''
 
 
 $(document).ready(function () {
+
+    
+    initBoard()
+
 
     $('.l8n-button').click(function () {
 
@@ -27,30 +40,196 @@ $(document).ready(function () {
 
         switch (this.id) {
             case 'en':
-                rightGuessString = WORDS_EN[Math.floor(Math.random() * WORDS_EN.length)]
-                WORDS = WORDS_EN
                 Language = 'en';
+                WORDS = WORDS_EN
                 removeDEKeys();
                 break;
             case 'de':
-                rightGuessString = WORDS_DE[Math.floor(Math.random() * WORDS_DE.length)]
-                WORDS = WORDS_DE
                 Language = 'de';
+                WORDS = WORDS_DE
                 addDEkeys();
                 break;
         }
+
+        getWord()
+
     });
 
     $('#hard-mode').click(function() {
-        if (HardMode == false) {
-            this.style.backgroundColor = '#F73D4B';
-            HardMode = true;
+        if (GameStarted) {
+            toastr.error("Game mode cannot be changed mid-game");
         } else {
-            this.style.backgroundColor = '#C50E1F';
-            HardMode = false;
+
+            if (HardMode == false) {
+                this.style.backgroundColor = '#F73D4B';
+                HardMode = true;
+                var display = document.querySelector('#time');
+                timeLimit = hardModeTimeLimit
+                var display = document.querySelector('#time');
+                display.textContent = "03:00"
+            } else {
+                this.style.backgroundColor = '#C50E1F';
+                HardMode = false;
+                var display = document.querySelector('#time');
+                timeLimit = easyModeTimeLimit
+                var display = document.querySelector('#time');
+                display.textContent = "05:00"
+            }
         }
     });
+
+    $('#start-game').click(function() {
+
+        if (document.getElementById('user_name').value == "" || document.getElementById('user_id').value == "") {
+            toastr.error("Please input your user Name and numeric ID in the fields above");
+            return;
+        }
+        if ( isNaN(parseInt(document.getElementById('user_id').value, 10))){
+            toastr.error("ID must be numeric value");   
+            return;
+        }
+
+        startGame();
+    });
+
+    $('#resign-game').click(function() {
+
+        submit("", guessesRemaining, resignCondition)
+        endGame()
+        
+    });
+    document.getElementById("keyboard-cont").addEventListener("click", (e) => {
+        const target = e.target
+        
+        if (!target.classList.contains("keyboard-button")) {
+            return
+        }
+        let key = target.textContent
+    
+        if (key === "Del") {
+            key = "Backspace"
+        } 
+    
+        document.dispatchEvent(new KeyboardEvent("keyup", {'key': key}))
+    })
+
+
 });
+
+function getWord() {
+
+    $.ajax({
+        type: "GET",
+        url: "/api/v1/word",
+        data: {
+            "language": Language
+        },
+        success: function (result) {
+            WORD = result
+            console.log("Success, word is ", result)
+        },
+        error: function (result) {
+            console.log(result);
+        }
+    });
+    WORD = WORD
+}
+
+function submit(guess, guessesRemaining, condition){
+
+
+    $.ajax({
+        type: "GET",
+        url: "localhost:8088/api/v1/submit",
+        data: {
+            "name": document.getElementById('user_name').value,
+            "id": document.getElementById('user_id').value,
+            "condition": condition,
+            "word": WORD,
+            "guesses_remaining": guessesRemaining,
+            "guess": guess,
+            "hard_mode": HardMode 
+        },
+        success: function (result) {
+            
+            console.log("Submission succesful: ", result)
+        },
+        error: function (result) {
+            console.log(result);
+        }
+    });
+
+}
+
+
+
+function startGame() {
+    
+    getWord();
+    clearBoard();
+    initBoard();
+    GameStarted = true;
+    var display = document.querySelector('#time');
+    if (HardMode) {
+        display.textContent = "03:00"
+    } else {
+        display.textContent = "05:00"
+    }
+    
+    startTimer(timeLimit, display);
+    document.querySelector('#start-game').setAttribute("hidden", "");    
+    document.querySelector('#resign-game').removeAttribute("hidden");    
+  
+
+}
+
+function endGame() {
+
+    GameStarted = false;
+    clearInterval(refreshIntervalId);
+    document.querySelector('#start-game').removeAttribute("hidden");    
+    document.querySelector('#resign-game').setAttribute("hidden", "");    
+
+    
+
+}
+
+function clearBoard() {
+
+    nextLetter = 0
+    guessesRemaining = NUMBER_OF_GUESSES;
+    currentGuess = [];
+    hardModeCorrectGuesses = ['','','','','']; 
+    hardModeHints = []; 
+    nextLetter = 0;
+    const board = document.getElementById("game-board");
+    //document.querySelectorAll('.keyboard-button').forEach(e => e.style.backgroundColor = "buttonface");    
+    $('.keyboard-button').css( 'all', 'revert');
+    $('.keyboard-button').removeAttr("style");
+    board.innerHTML = '';
+}
+
+function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    refreshIntervalId = setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            timer = duration;
+            submit(guess, guessesRemaining, timeoutCondition)
+            toastr.error("Time Ran out! Restarting")
+            endGame()
+        }
+    }, 1000);
+}
+
+
 
 function addDEkeys() {
     document.querySelectorAll('.de-button').forEach(e => e.removeAttribute("hidden"));    
@@ -105,9 +284,19 @@ function deleteLetter () {
 }
 
 function checkGuess () {
+
+    if (document.getElementById('user_name').value == "" || document.getElementById('user_id').value == "") {
+        toastr.error("Please input your user Name and numeric ID in the fields above");
+        return;
+    }
+    if ( isNaN(parseInt(document.getElementById('user_id').value, 10))){
+        toastr.error("ID must be numeric value");   
+        return;
+    }
+
     let row = document.getElementsByClassName("letter-row")[6 - guessesRemaining]
     let guessString = ''
-    let rightGuess = Array.from(rightGuessString)
+    let rightGuess = Array.from(WORD)
 
     for (const val of currentGuess) {
         guessString += val
@@ -179,19 +368,28 @@ function checkGuess () {
         }, delay)
     }
 
-    if (guessString === rightGuessString) {
+    if (guessString === WORD) {
         toastr.success("You guessed right! Game over!")
+        submit(winCondition)
         guessesRemaining = 0
+        endGame();
         return
     } else {
         guessesRemaining -= 1;
+
+        if (guessesRemaining === 0) {
+            submit(currentGuess, guessesRemaining, lossCondition)
+            toastr.error("You've run out of guesses! Game over!")
+            toastr.info(`The right word was: "${WORD}"`)
+            endGame();
+        } else {
+            submit(currentGuess, guessesRemaining, guessCondition)
+        }
+        
         currentGuess = [];
         nextLetter = 0;
 
-        if (guessesRemaining === 0) {
-            toastr.error("You've run out of guesses! Game over!")
-            toastr.info(`The right word was: "${rightGuessString}"`)
-        }
+
     }
 }
 
@@ -199,6 +397,12 @@ function insertLetter (pressedKey) {
     if (nextLetter === 5) {
         return
     }
+
+    if ($('#user_id').is(':focus') ||  $('#user_name').is(':focus')) {
+        return
+    }
+
+
     pressedKey = pressedKey.toLowerCase()
 
     let row = document.getElementsByClassName("letter-row")[6 - guessesRemaining]
@@ -238,11 +442,14 @@ document.addEventListener("keyup", (e) => {
 
     let pressedKey = String(e.key)
     if (pressedKey === "Backspace" && nextLetter !== 0) {
+        if ($('#user_id').is(':focus') ||  $('#user_name').is(':focus')) {
+            return
+        }
         deleteLetter()
         return
     }
 
-    if (pressedKey === "Enter") {
+    if (pressedKey === "Submit") {
         checkGuess()
         return
     }
@@ -268,19 +475,6 @@ document.addEventListener("keyup", (e) => {
     }
 })
 
-document.getElementById("keyboard-cont").addEventListener("click", (e) => {
-    const target = e.target
-    
-    if (!target.classList.contains("keyboard-button")) {
-        return
-    }
-    let key = target.textContent
 
-    if (key === "Del") {
-        key = "Backspace"
-    } 
 
-    document.dispatchEvent(new KeyboardEvent("keyup", {'key': key}))
-})
 
-initBoard();
