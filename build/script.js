@@ -129,12 +129,15 @@ $(document).ready(function () {
 
 function getWord() {
 
+    getWordData = {
+        "language": Language
+    }
+
     $.ajax({
         type: "GET",
         url: "/api/v1/word",
-        data: {
-            "language": Language
-        },
+        dataType: 'json',
+        data: JSON.stringify(getWordData),
         success: function (result) {
             WORD = result
             console.log("Success, word is ", result)
@@ -148,20 +151,23 @@ function getWord() {
 
 function submit(guess, condition){
 
+    submitData = {
+        "name": user_name,
+        "id": user_id,
+        "condition": condition,
+        "word": WORD,
+        "guesses_remaining": guessesRemaining,
+        "guess": guess,
+        "hard_mode": HardMode,
+        "confidence_level": confidenceLevel 
+    }
+
 
     $.ajax({
         type: "POST",
         url: "/api/v1/submit",
-        data: {
-            "name": user_name,
-            "id": user_id,
-            "condition": condition,
-            "word": WORD,
-            "guesses_remaining": guessesRemaining,
-            "guess": guess,
-            "hard_mode": HardMode,
-            "confidence_level": confidenceLevel 
-        },
+        dataType: 'json',
+        data: JSON.stringify(submitData),
         success: function (result) {
             
             console.log("Submission succesful: ", result)

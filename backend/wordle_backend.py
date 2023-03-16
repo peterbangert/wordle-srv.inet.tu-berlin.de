@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 from flask_cors import CORS
 import logging
@@ -13,21 +13,21 @@ api = Api(app,prefix="/api/v1")
 CORS(app)
 
 # Arguments for Submission API
-submit_args = reqparse.RequestParser()
-submit_args.add_argument('name',type=str)
-submit_args.add_argument('id',type=int)
-submit_args.add_argument('guess',type=str)
-submit_args.add_argument('condition',type=str)
-submit_args.add_argument('guesses_remaining',type=int)
-submit_args.add_argument('hard_mode',type=bool)
-submit_args.add_argument('word',type=str)
-submit_args.add_argument('confidence_level',type=int)
+# submit_args = reqparse.RequestParser()
+# submit_args.add_argument('name',type=str)
+# submit_args.add_argument('id',type=int)
+# submit_args.add_argument('guess',type=str)
+# submit_args.add_argument('condition',type=str)
+# submit_args.add_argument('guesses_remaining',type=int)
+# submit_args.add_argument('hard_mode',type=bool)
+# submit_args.add_argument('word',type=str)
+# submit_args.add_argument('confidence_level',type=int)
 results_header = "name,id,condition,word,guess,guesses_remaining,confidence_level,hard_mode"
 
 
 # Arguments for Get Words API
-getwords_args = reqparse.RequestParser()
-getwords_args.add_argument('language')
+# getwords_args = reqparse.RequestParser()
+# getwords_args.add_argument('language')
 
 
 
@@ -50,8 +50,11 @@ if not os.path.exists(results_dir):
 class PostSubmit(Resource):
     def post(self):
         app.logger.info("Processing Results")
-        args = submit_args.parse_args()
-        app.logger.info(args)
+        # args = submit_args.parse_args()
+        # app.logger.info(args)
+        args = ''
+        json_data = request.get_json(force=True)
+        app.logger.info(json_data)
         
         results_csv = f"{results_dir}/{args.name}_{args.id}.csv"
 
@@ -78,8 +81,11 @@ class GetWord(Resource):
         app.logger.info("Getting Word")
 
         app.logger.info(request)
-        args = getwords_args.parse_args()
-        app.logger.info(args)
+        # args = getwords_args.parse_args()
+        # app.logger.info(args)
+        json_data = request.get_json(force=True)
+        app.logger.info(json_data)
+        args = ''
 
         if args.language not in ['de','en']: 
             return {"Failue, language not recognized": 404}
