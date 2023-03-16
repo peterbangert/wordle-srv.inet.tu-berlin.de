@@ -150,8 +150,8 @@ function submit(guess, guessesRemaining, condition){
 
 
     $.ajax({
-        type: "GET",
-        url: "localhost:8088/api/v1/submit",
+        type: "POST",
+        url: "/api/v1/submit",
         data: {
             "name": user_name,
             "id": user_id,

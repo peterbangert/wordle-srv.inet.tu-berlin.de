@@ -3,7 +3,7 @@ Description=Gunicorn uWSGI for wordle-srv.inet.tu-berlin.de backend
 After=network.target
 
 [Service]
-User=wordle
+User=root
 Group=www-data
 Environment="PATH=/home/wordle/.local/bin"
 WorkingDirectory=/home/wordle/wordle-srv.inet.tu-berlin.de/backend

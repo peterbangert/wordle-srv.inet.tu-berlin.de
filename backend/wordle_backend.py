@@ -38,6 +38,7 @@ if not os.path.exists(basedir):
     os.makedirs(basedir)
 open(logfile,'a').close()
 logging.basicConfig(filename=logfile, level=logging.DEBUG)
+logging.Formatter("%(asctime)s %(name)s %(levelname)s %(message)s")
 
 # Setup Results Dir
 curdate = datetime.utcnow().strftime("%d%m%Y")
@@ -71,9 +72,9 @@ class PostSubmit(Resource):
         return {f"Submission from {args.name},{args.id}: successful"}
 
 
-class GetWords(Resource):
+class GetWord(Resource):
     def get(self):
-        app.logger.info("Getting Words")
+        app.logger.info("Getting Word")
         args = getwords_args.parse_args()
         app.logger.info(args)
 
@@ -87,11 +88,12 @@ class GetWords(Resource):
 
         word = words[random.randint(0,len(words))]
       
+        app.logger.info(f"Returning word: {word}")
         return {'Word': word}
 
 
 api.add_resource(PostSubmit,'/submit')
-api.add_resource(GetWords,'/word')
+api.add_resource(GetWord,'/word')
 
 if __name__ == '__main__':
     app.run(debug=True) 
