@@ -134,7 +134,7 @@ function getWord() {
     }
 
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "/api/v1/word",
         dataType: 'json',
         data: JSON.stringify(getWordData),

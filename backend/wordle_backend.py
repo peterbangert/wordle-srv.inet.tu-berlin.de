@@ -14,20 +14,20 @@ CORS(app)
 
 # Arguments for Submission API
 # submit_args = reqparse.RequestParser()
-# submit_args.add_argument('name',type=str)
-# submit_args.add_argument('id',type=int)
-# submit_args.add_argument('guess',type=str)
-# submit_args.add_argument('condition',type=str)
-# submit_args.add_argument('guesses_remaining',type=int)
-# submit_args.add_argument('hard_mode',type=bool)
-# submit_args.add_argument('word',type=str)
-# submit_args.add_argument('confidence_level',type=int)
+# submit_json_data['add_argument('name',type=str)
+# submit_json_data['add_argument('id',type=int)
+# submit_json_data['add_argument('guess',type=str)
+# submit_json_data['add_argument('condition',type=str)
+# submit_json_data['add_argument('guesses_remaining',type=int)
+# submit_json_data['add_argument('hard_mode',type=bool)
+# submit_json_data['add_argument('word',type=str)
+# submit_json_data['add_argument('confidence_level',type=int)
 results_header = "name,id,condition,word,guess,guesses_remaining,confidence_level,hard_mode"
 
 
 # Arguments for Get Words API
 # getwords_args = reqparse.RequestParser()
-# getwords_args.add_argument('language')
+# getwords_json_data['add_argument('language')
 
 
 
@@ -50,30 +50,30 @@ if not os.path.exists(results_dir):
 class PostSubmit(Resource):
     def post(self):
         app.logger.info("Processing Results")
-        # args = submit_args.parse_args()
+        # args = submit_json_data['parse_args()
         # app.logger.info(args)
-        args = ''
+        # args = ''
         json_data = request.get_json(force=True)
         app.logger.info(json_data)
         
-        results_csv = f"{results_dir}/{args.name}_{args.id}.csv"
+        results_csv = f"{results_dir}/{json_data['name']}_{json_data['id']}.csv"
 
         if not os.path.isfile(results_csv): 
             with open(results_csv, 'a') as f:    
                 f.write(results_header)
 
         with open(results_csv, 'a') as f:
-            f.write(f"{args.name},\
-                    {args.id},\
-                    {args.condition},\
-                    {args.word},\
-                    {args.guess},\
-                    {args.guesses_remaining},\
-                    {args.confidence_level},\
-                    {args.hard_mode}")
+            f.write(f"{json_data['name']},\
+                    {json_data['id']},\
+                    {json_data['condition']},\
+                    {json_data['word']},\
+                    {json_data['guess']},\
+                    {json_data['guesses_remaining']},\
+                    {json_data['confidence_level']},\
+                    {json_data['hard_mode']}")
       
-        app.logger.info(f"Submission from {args.name},{args.id}: successful")
-        return {f"Submission from {args.name},{args.id}: successful"}
+        app.logger.info(f"Submission from {json_data['name']},{json_data['id']}: successful")
+        return {f"Submission from {json_data['name']},{json_data['id']}: successful"}
 
 
 class GetWord(Resource):
@@ -81,16 +81,16 @@ class GetWord(Resource):
         app.logger.info("Getting Word")
 
         app.logger.info(request)
-        # args = getwords_args.parse_args()
+        # args = getwords_json_data['parse_args()
         # app.logger.info(args)
+        # args = ''
         json_data = request.get_json(force=True)
         app.logger.info(json_data)
-        args = ''
 
-        if args.language not in ['de','en']: 
+        if json_data['language'] not in ['de','en']: 
             return {"Failue, language not recognized": 404}
         else:
-            file_suffix = args.language
+            file_suffix = json_data['language']
         
         with open(f'words/words_{file_suffix}.json','r') as f:
             words = json.load(f)
