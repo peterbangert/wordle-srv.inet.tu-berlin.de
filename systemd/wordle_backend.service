@@ -1,5 +1,5 @@
 [Unit]
-Description=Gunicorn uWSGI for sprawl.hvc.berlin backend
+Description=Gunicorn uWSGI for wordle-srv.inet.tu-berlin.de backend
 After=network.target
 
 [Service]
