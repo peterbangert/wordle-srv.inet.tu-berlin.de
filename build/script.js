@@ -129,7 +129,7 @@ $(document).ready(function () {
 
 function getWord() {
 
-    getWordData = {
+    var getWordData = {
         "language": Language
     }
 
@@ -151,7 +151,7 @@ function getWord() {
 
 function submit(guess, condition){
 
-    submitData = {
+    var submitData = {
         "name": user_name,
         "id": user_id,
         "condition": condition,
