@@ -92,9 +92,13 @@ class GetWord(Resource):
         app.logger.info(f"Returning word: {word}")
         return {'Word': word}
 
+class Hello(Resource):
+    def get(self):
+        return {"Hello"}
 
 api.add_resource(PostSubmit,'/submit')
 api.add_resource(GetWord,'/word')
+api.add_resource(Hello,'/hello')
 
 if __name__ == '__main__':
     app.run(debug=True) 
