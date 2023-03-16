@@ -64,6 +64,9 @@ class PostSubmit(Resource):
 
         result_str = ''
         for x in ["name","id","condition","word","guess","guesses_remaining","confidence_level","hard_mode"]:
+            if x == 'name':
+                result_str += f"{json_data[x]}"
+                continue
             if x == 'guess':
                 result_str += f",{''.join(json_data[x])}"
                 continue
@@ -73,11 +76,12 @@ class PostSubmit(Resource):
             f.write(f"{result_str}\n")
       
         app.logger.info(f"Submission from {json_data['name']},{json_data['id']}: successful")
-        return {f"Submission from {json_data['name']},{json_data['id']}: successful"}
+        # return {f"Submission from {json_data['name']},{json_data['id']}: successful"}
+        return jsonify(success=200)
 
 
 class GetWord(Resource):
-    def get(self):
+    def post(self):
         app.logger.info("Getting Word")
         # args = getwords_json_data['parse_args()
         # app.logger.info(args)
@@ -93,10 +97,11 @@ class GetWord(Resource):
         with open(f'words/words_{file_suffix}.json','r') as f:
             words = json.load(f)
 
-        word = words[random.randint(0,len(words))]
+        rtn_word = words[random.randint(0,len(words))]
       
-        app.logger.info(f"Returning word: {word}")
-        return {'Word': word}
+        app.logger.info(f"Returning word: {rtn_word}")
+        # return {'Word': word}
+        return jsonify(word=rtn_word)
 
 class Hello(Resource):
     def get(self):
