@@ -60,17 +60,17 @@ class PostSubmit(Resource):
 
         if not os.path.isfile(results_csv): 
             with open(results_csv, 'a') as f:    
-                f.write(results_header)
+                f.write(f"{results_header}\n")
+
+        result_str = ''
+        for x in ["name","id","condition","word","guess","guesses_remaining","confidence_level","hard_mode"]
+            if x == 'guess':
+                result_str += f",{''.join(json_data[x])}"
+                continue
+            result_str += f",{json_data[x]}"
 
         with open(results_csv, 'a') as f:
-            f.write(f"{json_data['name']},\
-                    {json_data['id']},\
-                    {json_data['condition']},\
-                    {json_data['word']},\
-                    {json_data['guess']},\
-                    {json_data['guesses_remaining']},\
-                    {json_data['confidence_level']},\
-                    {json_data['hard_mode']}")
+            f.write(f"{result_str}\n")
       
         app.logger.info(f"Submission from {json_data['name']},{json_data['id']}: successful")
         return {f"Submission from {json_data['name']},{json_data['id']}: successful"}
@@ -79,8 +79,6 @@ class PostSubmit(Resource):
 class GetWord(Resource):
     def get(self):
         app.logger.info("Getting Word")
-
-        app.logger.info(request)
         # args = getwords_json_data['parse_args()
         # app.logger.info(args)
         # args = ''
