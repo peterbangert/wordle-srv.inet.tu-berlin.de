@@ -69,6 +69,7 @@ class PostSubmit(Resource):
                     {args.confidence_level},\
                     {args.hard_mode}")
       
+        app.logger.info(f"Submission from {args.name},{args.id}: successful")
         return {f"Submission from {args.name},{args.id}: successful"}
 
 

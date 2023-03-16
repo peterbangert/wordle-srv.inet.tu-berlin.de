@@ -89,7 +89,7 @@ $(document).ready(function () {
 
     $('#resign-game').click(function() {
 
-        submit("", guessesRemaining, resignCondition)
+        submit("", resignCondition)
         endGame()
         
     });
@@ -146,7 +146,7 @@ function getWord() {
     WORD = WORD
 }
 
-function submit(guess, guessesRemaining, condition){
+function submit(guess, condition){
 
 
     $.ajax({
@@ -266,7 +266,7 @@ function startTimer(duration, display) {
 
         if (--timer < 0) {
             timer = duration;
-            submit(guess, guessesRemaining, timeoutCondition)
+            submit('', timeoutCondition)
             toastr.error("Time Ran out! Restarting")
             endGame()
         }
@@ -406,7 +406,7 @@ function checkGuess () {
 
     if (guessString === WORD) {
         toastr.success("You guessed right! Game over!")
-        submit(winCondition)
+        submit(currentGuess, winCondition)
         guessesRemaining = 0
         endGame();
         return
@@ -414,12 +414,12 @@ function checkGuess () {
         guessesRemaining -= 1;
 
         if (guessesRemaining === 0) {
-            submit(currentGuess, guessesRemaining, lossCondition)
+            submit(currentGuess, lossCondition)
             toastr.error("You've run out of guesses! Game over!")
             toastr.info(`The right word was: "${WORD}"`)
             endGame();
         } else {
-            submit(currentGuess, guessesRemaining, guessCondition)
+            submit(currentGuess, guessCondition)
         }
         
         currentGuess = [];
