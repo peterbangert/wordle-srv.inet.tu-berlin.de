@@ -21,6 +21,8 @@ submit_args.add_argument('condition',type=str)
 submit_args.add_argument('guesses_remaining',type=int)
 submit_args.add_argument('hard_mode',type=bool)
 submit_args.add_argument('word',type=str)
+submit_args.add_argument('confidence_level',type=int)
+results_header = "name,id,condition,word,guess,guesses_remaining,confidence_level,hard_mode"
 
 
 # Arguments for Get Words API
@@ -30,7 +32,7 @@ getwords_args.add_argument('language',type=str)
 
 
 # Setup Logging
-logfile = 'log/wordle-backend.log'
+logfile = 'log/wordle_backend.log'
 basedir = os.path.dirname(logfile)
 if not os.path.exists(basedir):
     os.makedirs(basedir)
@@ -38,7 +40,8 @@ open(logfile,'a').close()
 logging.basicConfig(filename=logfile, level=logging.DEBUG)
 
 # Setup Results Dir
-results_dir = 'results/'
+curdate = datetime.utcnow().strftime("%d%m%Y")
+results_dir = f'results/{curdate}'
 if not os.path.exists(results_dir):
     os.makedirs(results_dir)
 
@@ -49,13 +52,23 @@ class PostSubmit(Resource):
         args = submit_args.parse_args()
         app.logger.info(args)
         
-        curdate = datetime.utcnow().strftime("%d%m%Y")
+        results_csv = f"{results_dir}/{args.name}_{args.id}.csv"
 
-        results_csv = f"{args.name}_{args.id}_{curdate}.csv"
+        if not os.path.isfile(results_csv): 
+            with open(results_csv, 'a') as f:    
+                f.write(results_header)
+
         with open(results_csv, 'a') as f:
-            f.write(args.guess)
+            f.write(f"{args.name},\
+                    {args.id},\
+                    {args.condition},\
+                    {args.word},\
+                    {args.guess},\
+                    {args.guesses_remaining},\
+                    {args.confidence_level},\
+                    {args.hard_mode}")
       
-        return {"Submission from {}".format(args.name):"successful"}
+        return {f"Submission from {args.name},{args.id}: successful"}
 
 
 class GetWords(Resource):
@@ -63,7 +76,6 @@ class GetWords(Resource):
         app.logger.info("Getting Words")
         args = getwords_args.parse_args()
         app.logger.info(args)
-        print("Recievd Get Request")
 
         if args.language not in ['de','en']: 
             return {"Failue, language not recognized": 404}

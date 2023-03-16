@@ -1,0 +1,10 @@
+[Unit]
+Description=Gunicorn uWSGI for sprawl.hvc.berlin backend
+After=network.target
+
+[Service]
+User=wordle
+Group=www-data
+Environment="PATH=/home/wordle/.local/bin"
+WorkingDirectory=/home/wordle/wordle-srv.inet.tu-berlin.de/backend
+ExecStart=gunicorn --bind unix:backend.sock -m 007 wsgi:app

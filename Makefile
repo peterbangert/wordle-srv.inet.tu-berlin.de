@@ -1,8 +1,6 @@
 deploy:
 	${MAKE} deploy-nginx
 	${MAKE} restart-backend
-	sleep 5
-	${MAKE} reset-signals
 
 deploy-nginx:
 	sudo cp nginx/wordle-srv.inet.tu-berlin.de /etc/nginx/sites-enabled/
