@@ -94,7 +94,8 @@ class GetWord(Resource):
 
 class Hello(Resource):
     def get(self):
-        return {"Hello"}
+        app.logger.info("Recieved Hello Health Check")
+        return {"Hello": 200}
 
 api.add_resource(PostSubmit,'/submit')
 api.add_resource(GetWord,'/word')
