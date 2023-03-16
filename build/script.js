@@ -139,8 +139,8 @@ function getWord() {
         dataType: 'json',
         data: JSON.stringify(getWordData),
         success: function (result) {
-            WORD = result
-            console.log("Success, word is ", result)
+            WORD = result['word']
+            console.log("Success, word is ", WORD)
         },
         error: function (result) {
             console.log(result);
