@@ -24,5 +24,11 @@ server {
         return 200 '<html><body>Hello World</body></html>';
         break;
     }
+
+    location /api/v1{
+        proxy_set_header Host $host;
+        proxy_pass http://unix:/home/wordle/wordle-srv.inet.tu-berlin.de/backend/backend.sock;
+
+    }
 }
 

@@ -19,12 +19,12 @@ On the host machine install:
 
 1. [nginx](https://www.nginx.com/resources/wiki/start/topics/tutorials/install/)
 
-2. Flask and Gunicorn
 
-  `python3 -m pip install Flask gunicorn`
+2. Clone repository into home directory
 
-3. Install this repository in your home directory. 
-  - the current configurations are designed to work with username student-super
+3. Install requirements.txt
+
+    `pip install -r backend/requirements.txt`
 
 4. Run `make setup`
 
