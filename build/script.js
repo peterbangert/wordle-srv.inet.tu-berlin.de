@@ -21,14 +21,18 @@ let hardModeTimeLimit = 60 * 3
 let timeLimit = easyModeTimeLimit
 let GameStarted = false
 let refreshIntervalId = ''
+let confidenceLevel = 5
+
+let user_name = ''
+let user_id = ''
+
+
 
 
 $(document).ready(function () {
 
-    
     initBoard()
-
-
+    
     $('.l8n-button').click(function () {
 
         const l8n_dropdown = document.getElementById('l8n');
@@ -50,8 +54,6 @@ $(document).ready(function () {
                 addDEkeys();
                 break;
         }
-
-        getWord()
 
     });
 
@@ -80,14 +82,7 @@ $(document).ready(function () {
 
     $('#start-game').click(function() {
 
-        if (document.getElementById('user_name').value == "" || document.getElementById('user_id').value == "") {
-            toastr.error("Please input your user Name and numeric ID in the fields above");
-            return;
-        }
-        if ( isNaN(parseInt(document.getElementById('user_id').value, 10))){
-            toastr.error("ID must be numeric value");   
-            return;
-        }
+
 
         startGame();
     });
@@ -113,6 +108,22 @@ $(document).ready(function () {
         document.dispatchEvent(new KeyboardEvent("keyup", {'key': key}))
     })
 
+
+    $('#user-info-submit').click(function() {
+
+        closeForm();
+        
+    });
+
+    $('#confidence-level-submit').click(function() {
+        confidenceLevel = document.getElementById("confidenceLevelSlider").value
+        $('#confidenceLevelForm').hide();
+        checkGuess();
+        
+        
+    });
+
+    $('#confidenceLevelForm').hide();
 
 });
 
@@ -142,13 +153,14 @@ function submit(guess, guessesRemaining, condition){
         type: "GET",
         url: "localhost:8088/api/v1/submit",
         data: {
-            "name": document.getElementById('user_name').value,
-            "id": document.getElementById('user_id').value,
+            "name": user_name,
+            "id": user_id,
             "condition": condition,
             "word": WORD,
             "guesses_remaining": guessesRemaining,
             "guess": guess,
-            "hard_mode": HardMode 
+            "hard_mode": HardMode,
+            "confidence_level": confidenceLevel 
         },
         success: function (result) {
             
@@ -160,7 +172,42 @@ function submit(guess, guessesRemaining, condition){
     });
 
 }
+function openForm() {
 
+    var form = document.getElementById("myForm");
+    form.style.display = "block";
+    form.style.bottom = (window.innerHeight/2 - form.offsetHeight/2).toString() + "px";
+    form.style.right = (window.innerWidth/2 - form.offsetWidth/2).toString() + "px"; 
+  }
+  
+function closeForm() {
+    
+    user_id = document.getElementById("user_id").value
+    user_name = document.getElementById("user_name").value
+
+    if ( isNaN(parseInt(user_id, 10))){
+        toastr.error("ID must be numeric value, please reload page and try again");   
+        return;
+    }
+    document.getElementById("myForm").style.display = "none";
+}
+
+function getConfidenceScore() { 
+
+    $('#confidenceLevelForm').show()
+    var form = document.getElementById("confidenceLevelForm");
+    form.style.bottom = (window.innerHeight/2 - form.offsetHeight/2).toString() + "px";
+    form.style.right = (window.innerWidth/2 - form.offsetWidth/2).toString() + "px"; 
+    
+    var slider = document.getElementById("confidenceLevelSlider");
+    var output = document.getElementById("confidenceLevelSliderValue");
+    output.innerHTML = slider.value;
+
+    slider.oninput = function() {
+    output.innerHTML = this.value;
+    }
+
+}
 
 
 function startGame() {
@@ -180,7 +227,6 @@ function startGame() {
     document.querySelector('#start-game').setAttribute("hidden", "");    
     document.querySelector('#resign-game').removeAttribute("hidden");    
   
-
 }
 
 function endGame() {
@@ -189,8 +235,6 @@ function endGame() {
     clearInterval(refreshIntervalId);
     document.querySelector('#start-game').removeAttribute("hidden");    
     document.querySelector('#resign-game').setAttribute("hidden", "");    
-
-    
 
 }
 
@@ -285,14 +329,6 @@ function deleteLetter () {
 
 function checkGuess () {
 
-    if (document.getElementById('user_name').value == "" || document.getElementById('user_id').value == "") {
-        toastr.error("Please input your user Name and numeric ID in the fields above");
-        return;
-    }
-    if ( isNaN(parseInt(document.getElementById('user_id').value, 10))){
-        toastr.error("ID must be numeric value");   
-        return;
-    }
 
     let row = document.getElementsByClassName("letter-row")[6 - guessesRemaining]
     let guessString = ''
@@ -449,8 +485,12 @@ document.addEventListener("keyup", (e) => {
         return
     }
 
-    if (pressedKey === "Submit") {
-        checkGuess()
+    if (pressedKey === "Submit" ||  pressedKey === "Enter") {
+        if (!GameStarted) { 
+            toastr.error("Please Start Game first")
+            return
+        }
+        getConfidenceScore()
         return
     }
 
@@ -478,3 +518,4 @@ document.addEventListener("keyup", (e) => {
 
 
 
+openForm()

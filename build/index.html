@@ -29,21 +29,39 @@
         </div> 
       </div>
     
-
-    
-      <div id="user-info">
-        <form  method="get" id="name-id-form">
-          Name: 
-          <input type="text" id="user_name" value="" maxlength="40" />
-           ID: 
-          <input type="text" id="user_id" value="" maxlength="40" />
+      <div class="form-popup" id="myForm">
+        <form onsubmit="return false" class="form-container">
+          <h1>Login</h1>
+      
+          <label for="name"><b>Name</b></label>
+          <input id="user_name" type="text" placeholder="Enter First Name" name="name" required>
+      
+          <label for="id"><b>ID</b></label>
+          <input id="user_id" type="text" placeholder="Enter numeric ID value" name="id" required>
+      
+          <button id="user-info-submit" class="btn">Go</button>
           
-          </form>
-        </div>
-    
-    <div id="game-board">
+        </form>
+      </div>
 
-    </div>
+      <div class="form-popup" id="confidenceLevelForm" >
+        <form onsubmit="return false" class="form-container">
+          <h1>Confidence Score</h1>
+      
+          <input type="range" min="1" max="10" value="5" class="slider" id="confidenceLevelSlider">
+          
+          <p>Value: <span id="confidenceLevelSliderValue"></span></p>
+
+          <button id="confidence-level-submit" class="btn">Go</button>
+
+
+        </form>
+      </div>
+    
+    
+
+    
+    <div id="game-board"></div>
 
     
 
