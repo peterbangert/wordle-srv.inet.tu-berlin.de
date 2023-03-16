@@ -37,8 +37,8 @@ basedir = os.path.dirname(logfile)
 if not os.path.exists(basedir):
     os.makedirs(basedir)
 open(logfile,'a').close()
-logging.basicConfig(filename=logfile, level=logging.DEBUG)
-logging.Formatter("%(asctime)s %(name)s %(levelname)s %(message)s")
+logging.basicConfig(filename=logfile, level=logging.DEBUG, format="%(asctime)s %(name)s %(levelname)s %(message)s")
+
 
 # Setup Results Dir
 curdate = datetime.utcnow().strftime("%d%m%Y")
