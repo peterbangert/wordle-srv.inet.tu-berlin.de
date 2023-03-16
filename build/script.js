@@ -140,7 +140,7 @@ function getWord() {
         data: JSON.stringify(getWordData),
         success: function (result) {
             WORD = result['word']
-            console.log("Success, word is ", WORD)
+            console.log("Successful word retrieval")
         },
         error: function (result) {
             console.log(result);
