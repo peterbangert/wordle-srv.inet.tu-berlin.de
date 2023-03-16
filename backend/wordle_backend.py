@@ -27,7 +27,7 @@ results_header = "name,id,condition,word,guess,guesses_remaining,confidence_leve
 
 # Arguments for Get Words API
 getwords_args = reqparse.RequestParser()
-getwords_args.add_argument('language',type=str)
+getwords_args.add_argument('language')
 
 
 
