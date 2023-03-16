@@ -76,6 +76,8 @@ class PostSubmit(Resource):
 class GetWord(Resource):
     def get(self):
         app.logger.info("Getting Word")
+
+        app.logger.info(request)
         args = getwords_args.parse_args()
         app.logger.info(args)
 
