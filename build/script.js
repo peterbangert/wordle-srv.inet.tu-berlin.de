@@ -18,10 +18,13 @@ let timeoutCondition = 'Timeout'
 let resignCondition = 'Resign'
 let easyModeTimeLimit = 60 * 5
 let hardModeTimeLimit = 60 * 3
-let timeLimit = easyModeTimeLimit
+let MatchTimeLimit = easyModeTimeLimit
 let GameStarted = false
 let refreshIntervalId = ''
 let confidenceLevel = 5
+let GameNumber = 1
+let StartHour = false
+let GameTimeLimit = 60* 60
 
 let user_name = ''
 let user_id = ''
@@ -65,16 +68,16 @@ $(document).ready(function () {
             if (HardMode == false) {
                 this.style.backgroundColor = '#F73D4B';
                 HardMode = true;
-                var display = document.querySelector('#time');
-                timeLimit = hardModeTimeLimit
-                var display = document.querySelector('#time');
+                var display = document.querySelector('#match-time');
+                MatchTimeLimit = hardModeTimeLimit
+                var display = document.querySelector('#match-time');
                 display.textContent = "03:00"
             } else {
                 this.style.backgroundColor = '#C50E1F';
                 HardMode = false;
-                var display = document.querySelector('#time');
-                timeLimit = easyModeTimeLimit
-                var display = document.querySelector('#time');
+                var display = document.querySelector('#match-time');
+                MatchTimeLimit = easyModeTimeLimit
+                var display = document.querySelector('#match-time');
                 display.textContent = "05:00"
             }
         }
@@ -156,10 +159,13 @@ function submit(guess, condition){
         "id": user_id,
         "condition": condition,
         "word": WORD,
-        "guesses_remaining": guessesRemaining,
         "guess": guess,
+        "guesses_remaining": guessesRemaining,
         "hard_mode": HardMode,
-        "confidence_level": confidenceLevel 
+        "confidence_level": confidenceLevel,
+        "match_time": document.querySelector('#match-time').innerText,
+        "game_number": GameNumber,
+        "game_time": document.querySelector('#game-time').innerText
     }
 
 
@@ -222,14 +228,24 @@ function startGame() {
     clearBoard();
     initBoard();
     GameStarted = true;
-    var display = document.querySelector('#time');
+
+    if (!StartHour) {
+        StartHour = true
+        var display = document.querySelector('#game-time');
+        startTimer(GameTimeLimit, display);
+    } else {
+        GameNumber += 1
+        document.querySelector('#game-number').innerText = GameNumber + "/20";
+    }
+
+    var display = document.querySelector('#match-time');
     if (HardMode) {
         display.textContent = "03:00"
     } else {
         display.textContent = "05:00"
     }
     
-    startTimer(timeLimit, display);
+    startTimer(MatchTimeLimit, display);
     document.querySelector('#start-game').setAttribute("hidden", "");    
     document.querySelector('#resign-game').removeAttribute("hidden");    
   

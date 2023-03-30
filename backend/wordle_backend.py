@@ -63,7 +63,7 @@ class PostSubmit(Resource):
                 f.write(f"{results_header}\n")
 
         result_str = ''
-        for x in ["name","id","condition","word","guess","guesses_remaining","confidence_level","hard_mode"]:
+        for x in ["name","id","condition","word","guess","guesses_remaining","confidence_level","hard_mode","match_time","game_number","game_time"]:
             if x == 'name':
                 result_str += f"{json_data[x]}"
                 continue

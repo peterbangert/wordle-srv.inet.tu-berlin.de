@@ -59,7 +59,11 @@ h1 {
   margin: 1.0rem 0;
 }
 
-#time {
+.fifth-row {
+  display: block;
+}
+
+#game-time, #match-time, #game-number {
   font-family: Verdana,sans-serif;
   font-size: 30px;
   line-height: 1.5;
