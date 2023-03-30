@@ -22,7 +22,7 @@ CORS(app)
 # submit_json_data['add_argument('hard_mode',type=bool)
 # submit_json_data['add_argument('word',type=str)
 # submit_json_data['add_argument('confidence_level',type=int)
-results_header = "name,id,condition,word,guess,guesses_remaining,confidence_level,hard_mode"
+results_header = "name,id,condition,word,guess,guesses_remaining,confidence_level,hard_mode,match_time,game_number,game_time"
 
 
 # Arguments for Get Words API
